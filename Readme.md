@@ -26,7 +26,7 @@ A Modern HyprLock Theme which is compatible with End4dots, Hyprdots adn Default 
 
 <br>
 <div align="center">
-  <a href="#introduction"><kbd> <br> Installation <br> </kbd></a>&ensp;&ensp;
+  <a href="#introduction"><kbd> <br> Introduction <br> </kbd></a>&ensp;&ensp;
   <a href="#installation"><kbd> <br> Installation <br> </kbd></a>&ensp;&ensp;
   <a href="#styles"><kbd> <br> Styles <br> </kbd></a>&ensp;&ensp;
 </div>
@@ -59,4 +59,31 @@ Please reboot or relogin after the install script completes.
 <a id="styles"></a>  
 <img src="./assets/Styles.gif" width="200"/>
 ---
-<- Yet to Put them here ->
+
+<table width="100%">
+  <tr>
+    <th><div align="center">blazinlock -ew</div></th>
+    <th><div align="center">blazinlock -es</div></th>
+  <tr>
+  <tr>
+    <td><img src="./assets/blazinlockew.png" width="100%"></td>
+    <td><img src="./assets/blazinlockes.png" width="100%"></td>
+  <tr>
+  <tr>
+    <th><div align="center">blazinlock -hw</div></th>
+    <th><div align="center">blazinlock -hs</div></th>
+  </tr>
+  <tr>
+    <td><img src="./assets/blazinlockhw.png" width="100%"></td>
+    <td><img src="./assets/blazinlockhs.png" width="100%"></td>
+  
+  </tr>
+  <tr>
+    <th><div align="center">blazinlock -i "path"</div></th>
+    <th><div align="center">blazinlock -s</div></th>
+  </tr>
+  <tr>
+    <td><img src="./assets/blazinlocki.png" width="100%"></td>
+    <td><img src="./assets/blazinlocks.png" width="100%"></td>
+  </tr>
+<table>
