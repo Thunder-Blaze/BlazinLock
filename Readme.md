@@ -7,20 +7,23 @@
 <div align="center">
 A Modern HyprLock Theme which is compatible with End4dots, Hyprdots adn Default Hyprland Installations
 </div>
-Easy to Use and Has the following Features
-- Music Widget
-- Time Widget
-- PFP Widget along with Username and Hostname
-- Battery Widget
-- Modern Looking Input Box
-- Auto Color Pallete generation for End4 and Hyprdots
-- HyprLock Config Creation using Various Methords
-  - Screenshot with End4 (Ags) Material Color Scheme
-  - Current Wallpaper with End4 (Ags) Material Color Scheme
-  - Screenshot with Hyprdots (Waybar) Color Scheme
-  - Current Wallpaper with Hyprdots (Waybar) Color Scheme
-  - Default Screenshot
-  - Custom Image (Any Custom Image can be set as Hyprlock bg but it is not yet included in the Installer, you can run this manually)
+<br>
+
+### Easy to Use and Has the following Features
+* Music Widget
+* Time Widget
+* PFP Widget along with Username and Hostname
+* Battery Widget
+* Modern Looking Input Box
+* Auto Color Pallete generation for End4 and Hyprdots
+* HyprLock Config Creation using Various Methords
+  * Screenshot with End4 (Ags) Material Color Scheme
+  * Current Wallpaper with End4 (Ags) Material Color Scheme
+  * Screenshot with Hyprdots (Waybar) Color Scheme
+  * Current Wallpaper with Hyprdots (Waybar) Color Scheme
+  * Default Screenshot
+  * Custom Image (Any Custom Image can be set as Hyprlock bg but it is not yet included in the Installer, you can run this manually)
+
 <br>
 <div align="center">
   <a href="#introduction"><kbd> <br> Installation <br> </kbd></a>&ensp;&ensp;
