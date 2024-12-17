@@ -1,0 +1,654 @@
+#!/bin/bash
+
+function help {
+    if [ -s /usr/bin/figlet ]; then
+        figlet Help
+    else
+        echo "Help"
+    fi
+    echo "Usage: blazinlock [OPTIONS] [OPTION_VALUE]"
+    echo "Eg -"
+    echo "  blazinlock -hw"
+    echo "  blazinlock -hs"
+    echo "  blazinlock -i \$HOME/Pictures/background.png"
+    echo "  blazinlock -s"
+    echo ""
+    echo "============================================================="
+    echo "OPTIONS"
+    echo "  -hs = Hyprdots (waybar) Integration Screenshot"
+    echo "  -hw = Hyprdots (waybar) Integration Wallpaper"
+    echo "  -es = End 4 Dots (ags) Integration Screenshot"
+    echo "  -ew = End 4 Dots (ags) Integration Wallpaper"
+    echo "  -s  = Screenshot Type Hyprlock"
+    echo "  -i  = User Image Type Hyprlock"
+}
+
+
+if [ "$#" -eq 0 ]; then
+    help
+    exit  1
+fi
+
+# Define paths
+HYPRLOCK_DIR="$HOME/.config/hypr/"
+WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
+AGS_THEME_CSS="$HOME/.local/state/ags/scss/_material.scss"
+
+HyperdotIntegration() {
+    local TYPE=$1
+
+    if [ $TYPE -eq 0 ]; then
+        BACKGROUND_IMAGE=screenshot
+    else
+        BACKGROUND_IMAGE=$(swww query | grep -oP 'currently displaying: image: \K.*')
+        if [ -z "$BACKGROUND_IMAGE" ] || [ ! -f "$BACKGROUND_IMAGE" ]; then
+            echo "No valid background image found from swww."
+            exit 1
+        fi
+    fi
+
+    # Extract Theme Colors
+    if [ "$2" == "end4" ]; then
+        # AGS INTEGRATION (End 4 Dots)
+        FG_COLOR=$(grep "\$primary:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+        BG_COLOR=$(grep "\$background:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+        TEXT_COLOR=$(grep "\$onBackground:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+    else
+        # WAYBAR INTEGRATION
+        FG_COLOR=$(grep 'main-fg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
+        BG_COLOR=$(grep 'main-bg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
+        TEXT_COLOR=$(grep 'wb-act-bg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
+    fi
+
+    # Check if colors were extracted successfully
+    if [ -z "$FG_COLOR" ] || [ -z "$BG_COLOR" ] || [ -z "$TEXT_COLOR" ]; then
+        echo "Error: Failed to extract colors from $THEME_CSS. Please check the file."
+        exit 1
+    fi
+
+    BG_COLOR=${BG_COLOR: -6}
+    FG_COLOR=${FG_COLOR: -6}
+    TEXT_COLOR=${TEXT_COLOR: -6}
+
+    cd $HYPRLOCK_DIR
+
+    # Create the hyprlock config
+    cat << EOF > "hyprlock.conf"
+general {
+    grace = 1
+    ignore_empty_input = true
+    text_trim = false
+    disable_loading_bar = true
+}
+
+background {
+    color = rgba(${BG_COLOR}FF)
+    path = $BACKGROUND_IMAGE
+    blur_size = 2
+    blur_passes = 3
+    zindex = -1
+}
+
+# INPUT FIELD
+input-field {
+    monitor =
+    size = 230, 50
+    outline_thickness = 4
+    dots_size = 0.2 # Scale of input-field height, 0.2 - 0.8
+    dots_spacing = 0.2 # Scale of dots' absolute size, 0.0 - 1.0
+    dots_center = true
+    outer_color = rgba(${TEXT_COLOR}99)
+    inner_color = rgba(${BG_COLOR}FF)
+    font_color = rgba(${TEXT_COLOR}FF)
+    fade_on_empty = false
+    font_family = JetBrainsMono Nerd Font Mono
+    placeholder_text = <i><span foreground="##${TEXT_COLOR}">Input Password...</span></i>
+    hide_input = false
+    position = 0, -220
+    halign = center
+    valign = center
+    zindex = 10
+}
+
+# CLOCK/TIME
+label {
+    monitor =
+    text = \$TIME
+    color = rgba(255, 255, 255, 1)
+    shadow_color = rgba(${BG_COLOR}AA)
+    font_size = 90
+    shadow_passes = 3
+    shadow_boost = 0.5
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 0, -100
+    halign = center
+    valign = top
+    zindex = 3
+}
+
+# Big Rectangle
+shape {
+    monitor =
+    size = 100%, 60
+    color = rgba(${BG_COLOR}FF)
+    halign = center
+    valign = bottom
+    zindex = 0
+}
+
+# Small Rectangle for Battery
+shape {
+    monitor =
+    size = 70, 32
+    rounding = 12
+    color = rgba(${FG_COLOR}FF)
+    halign = right
+    valign = bottom
+    position = -14, 14
+    zindex = 1
+}
+
+# Battery Status
+label { 
+    monitor =
+    text = cmd[update:5000] ~/.config/hypr/hyprlock/blazinscripts.sh -bat
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(${BG_COLOR}FF)
+    shadow_color = rgba(${BG_COLOR}AA)
+    font_size = 14
+    font_family = Maple Mono
+    position = -21, -8
+    halign = right
+    valign = bottom
+    zindex = 2
+}
+
+# Small Rectangle for Session
+shape {
+    monitor =
+    size = 150, 32
+    rounding = 10
+    color = rgba(${FG_COLOR}FF)
+    halign = center
+    valign = bottom
+    position = 0, 14
+    zindex = 1
+}
+
+# Current Session Status
+label { 
+    monitor =
+    text = cmd[update:24000000] echo "Session : \$XDG_SESSION_DESKTOP"
+#    shadow_passes = 1
+#    shadow_boost = 0.5
+    color = rgba(${BG_COLOR}FF)
+    shadow_color = rgba(${BG_COLOR}AA)
+    font_size = 12
+    font_family = Jost Medium 
+    position = 0, -5
+    halign = center
+    valign = bottom
+    zindex = 2
+}
+
+# PFP Image
+image {
+    monitor =
+    path = \$HOME/.config/hypr/hyprlock/pfp.jpg
+    size = 100
+    rounding = -1
+    border_size = 3
+    border_color = rgba(${TEXT_COLOR}FF)
+    position = 10, 10
+    halign = left
+    valign = bottom
+    zindex = 3
+}
+
+
+# Username
+label { 
+    monitor =
+    text = \$USER
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(${FG_COLOR}FF)
+    shadow_color = rgba(${FG_COLOR}AA)
+    font_size = 14
+    font_family = Jost Bold Italic 
+    position = 120, 28
+    halign = left
+    valign = bottom
+    zindex = 2
+}
+
+# Hostname
+label { 
+    monitor =
+    text = cmd[update:24000000] echo "@\$(uname -n)"
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(${TEXT_COLOR}BB)
+    shadow_color = rgba(${TEXT_COLOR}AA)
+    font_size = 14
+    font_family = Jost Bold Italic 
+    position = 120, -20
+    halign = left
+    valign = bottom
+    zindex = 2
+}
+
+# Lock Icon
+label { 
+    monitor =
+    text = 
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(${TEXT_COLOR}FF)
+    shadow_color = rgba(${TEXT_COLOR}AA)
+    font_size = 20
+    font_family = Font Awesome 6 Free Solid
+    position = 0, -65
+    halign = center
+    valign = top
+    zindex = 2
+}
+# PLAYER IMAGE
+image {
+    monitor =
+    path = \$HOME/.config/hypr/hyprlock/music.webp
+    size = 60 # lesser side if not 1:1 ratio
+    rounding = 5 # negative values mean circle
+    border_size = 0
+    rotate = 0 # degrees, counter-clockwise
+    reload_time = 2
+    reload_cmd = ~/.config/hypr/hyprlock/blazinscripts.sh -music --arturl
+    position = -106, 0
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER BOX
+shape {
+    monitor =
+    color = rgba(${BG_COLOR}BB)
+    size = 300, 84
+    rounding = 10 # negative values mean circle
+    position = 0, 0
+    halign = center
+    valign = center
+    zindex = 0
+}
+
+# PLAYER TITTLE
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --title)"
+    color = rgba(${TEXT_COLOR}FF)
+    font_size = 14
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 50, -12
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER STATUS
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --status)"
+    color = rgba(${TEXT_COLOR}FF)
+    font_size = 18
+    font_family = JetBrains Mono Nerd Font Mono Bold
+    position = -50, -15
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER SOURCE
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --source)"
+    color = rgba(${FG_COLOR}99)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono 
+    position = -20, 18
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER Artist
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --artist)"
+    color = rgba(${FG_COLOR}BB)
+    font_size = 12
+    font_family = JetBrains Mono Nerd Font Mono
+    position = 24, -35
+    halign = center
+    valign = center
+    zindex = 1
+}
+EOF
+    echo "Generated Hyprland/End4 Config"
+}
+
+Standalone() {
+    local TYPE=$1
+
+    if [ $TYPE -eq 0 ]; then
+        BACKGROUND_IMAGE=screenshot
+    else
+        BACKGROUND_IMAGE="$2"
+        echo $2
+        if [ -z "$BACKGROUND_IMAGE" ] || [ ! -f "$BACKGROUND_IMAGE" ]; then
+            echo "No valid path provided for background image."
+            exit 1
+        elif [[ "$BACKGROUND_IMAGE" =~ ^.*\.{gif}$ ]]; then
+            echo "GIFs are not supported ATM"
+            exit 1
+        fi
+    fi
+
+    cd $HYPRLOCK_DIR
+
+    # Create the hyprlock config
+    cat << EOF > "hyprlock.conf"
+general {
+    grace = 1
+    ignore_empty_input = true
+    text_trim = false
+    disable_loading_bar = true
+}
+
+background {
+    color = rgba(222222FF)
+    path = $BACKGROUND_IMAGE
+    blur_size = 2
+    blur_passes = 3
+    zindex = -1
+}
+
+# INPUT FIELD
+input-field {
+    monitor =
+    size = 230, 50
+    outline_thickness = 4
+    dots_size = 0.2 # Scale of input-field height, 0.2 - 0.8
+    dots_spacing = 0.2 # Scale of dots' absolute size, 0.0 - 1.0
+    dots_center = true
+    outer_color = rgba(22222299)
+    inner_color = rgba(255, 255, 255, 0.8)
+    font_color = rgb(34, 34, 34)
+    fade_on_empty = false
+    font_family = JetBrainsMono Nerd Font Mono
+    placeholder_text = <i><span foreground="##222222">Input Password...</span></i>
+    hide_input = false
+    position = 0, -220
+    halign = center
+    valign = center
+    zindex = 10
+}
+
+# CLOCK/TIME
+label {
+    monitor =
+    text = \$TIME
+    color = rgba(255, 255, 255, 1)
+    font_size = 90
+    shadow_passes = 3
+    shadow_boost = 0.5
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 0, -100
+    halign = center
+    valign = top
+    zindex = 3
+}
+
+# Big Rectangle
+shape {
+    monitor =
+    size = 100%, 60
+    color = rgba(222222AA)
+    halign = center
+    valign = bottom
+    zindex = 0
+}
+
+# Small Rectangle for Battery
+shape {
+    monitor =
+    size = 70, 32
+    rounding = 12
+    color = rgba(FFFFFFFF)
+    halign = right
+    valign = bottom
+    position = -14, 14
+    zindex = 1
+}
+
+# Battery Status
+label { 
+    monitor =
+    text = cmd[update:5000] ~/.config/hypr/hyprlock/blazinscripts.sh -bat
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(222222FF)
+    font_size = 14
+    font_family = Maple Mono
+    position = -21, -8
+    halign = right
+    valign = bottom
+    zindex = 2
+}
+
+# Small Rectangle for Session
+shape {
+    monitor =
+    size = 150, 32
+    rounding = 10
+    color = rgba(FFFFFFFF)
+    halign = center
+    valign = bottom
+    position = 0, 14
+    zindex = 1
+}
+
+# Current Session Status
+label { 
+    monitor =
+    text = cmd[update:24000000] echo "Session : \$XDG_SESSION_DESKTOP"
+#    shadow_passes = 1
+#    shadow_boost = 0.5
+    color = rgba(222222FF)
+    font_size = 12
+    font_family = Jost Medium 
+    position = 0, -5
+    halign = center
+    valign = bottom
+    zindex = 2
+}
+
+# PFP Image
+image {
+    monitor =
+    path = \$HOME/.config/hypr/hyprlock/pfp.jpg
+    size = 100
+    rounding = -1
+    border_size = 3
+    border_color = rgba(FFFFFFFF)
+    position = 10, 10
+    halign = left
+    valign = bottom
+    zindex = 3
+}
+
+
+# Username
+label { 
+    monitor =
+    text = \$USER
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(FFFFFFFF)
+    font_size = 14
+    font_family = Jost Bold Italic 
+    position = 120, 28
+    halign = left
+    valign = bottom
+    zindex = 2
+}
+
+# Hostname
+label { 
+    monitor =
+    text = cmd[update:24000000] echo "@\$(uname -n)"
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(FFFFFFBB)
+    font_size = 14
+    font_family = Jost Bold Italic 
+    position = 120, -20
+    halign = left
+    valign = bottom
+    zindex = 2
+}
+
+# Lock Icon
+label { 
+    monitor =
+    text = 
+    shadow_passes = 1
+    shadow_boost = 0.5
+    color = rgba(255, 255, 255, 1)
+    font_size = 20
+    font_family = Font Awesome 6 Free Solid
+    position = 0, -65
+    halign = center
+    valign = top
+    zindex = 2
+}
+# PLAYER IMAGE
+image {
+    monitor =
+    path = \$HOME/.config/hypr/hyprlock/music.webp
+    size = 60 # lesser side if not 1:1 ratio
+    rounding = 5 # negative values mean circle
+    border_size = 0
+    rotate = 0 # degrees, counter-clockwise
+    reload_time = 2
+    reload_cmd = ~/.config/hypr/hyprlock/blazinscripts.sh -music --arturl
+    position = -106, 0
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER BOX
+shape {
+    monitor =
+    color = rgba(222222BB)
+    size = 300, 84
+    rounding = 10 # negative values mean circle
+    position = 0, 0
+    halign = center
+    valign = center
+    zindex = 0
+}
+
+# PLAYER TITTLE
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --title)"
+    color = rgba(255, 255, 255, 0.8)
+    font_size = 14
+    font_family = JetBrains Mono Nerd Font Mono ExtraBold
+    position = 50, -12
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER STATUS
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --status)"
+    color = rgba(255, 255, 255, 1)
+    font_size = 18
+    font_family = JetBrains Mono Nerd Font Mono Bold
+    position = -50, -15
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER SOURCE
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --source)"
+    color = rgba(255, 255, 255, 0.6)
+    font_size = 10
+    font_family = JetBrains Mono Nerd Font Mono 
+    position = -20, 16
+    halign = center
+    valign = center
+    zindex = 1
+}
+
+# PLAYER Artist
+label {
+    monitor =
+    text = cmd[update:1000] echo "\$(~/.config/hypr/hyprlock/blazinscripts.sh -music --artist)"
+    color = rgba(255, 255, 255, 0.8)
+    font_size = 12
+    font_family = JetBrains Mono Nerd Font Mono
+    position = 24, -35
+    halign = center
+    valign = center
+    zindex = 1
+}
+EOF
+    echo "Generated Hyprland Config"
+}
+
+# echo "Background Image: $BACKGROUND_IMAGE"
+# echo "Hyprlock config updated successfully with modern hostname@username display."
+# hyprlock 
+
+
+case "$1" in
+-s) 
+    echo "Screenshot Lock"
+    Standalone 0
+;;
+-i)
+    echo "Custom Image Lock"
+    Standalone 1 "$2"
+;;
+-hs)
+    echo "Hyprlock Screenshot"
+    HyperdotIntegration 0
+;;
+-hw)
+    echo "Hyprlock Wallpaper"
+    HyperdotIntegration 1
+;;
+-es)
+    echo "End 4 Screenshot"
+    HyperdotIntegration 0 end4
+;;
+-ew)
+    echo "End 4 Wallpaper"
+    HyperdotIntegration 1 end4
+;;
+*)
+    help
+    exit 1
+;;
+esac
+
+hyprlock
