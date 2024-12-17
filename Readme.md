@@ -25,7 +25,7 @@
 To install, execute the following commands:
 
 ```shell
-git clone https://github.com/prasanthrangan/hyprdots ~/BlazinLock
+git clone https://github.com/Thunder-Blaze/BlazinLock/ ~/BlazinLock
 cd ~/BlazinLock
 ./installer.sh
 ```
