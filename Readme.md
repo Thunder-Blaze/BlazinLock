@@ -87,3 +87,11 @@ Please reboot or relogin after the install script completes.
     <td><img src="./assets/blazinlocks.png" width="100%"></td>
   </tr>
 <table>
+
+
+## CUSTOMIZING PFP
+After Installation, goto "~/.config/hyde/hyprlock"
+Replace the pfp.jpg with the image you want as your PFP
+
+> [!IMPORTANT]
+> The only File types that are currently supported are JPG, PNG and WEBP.
