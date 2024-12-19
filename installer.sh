@@ -12,19 +12,31 @@ fi
 echo ""
 
 if [[ -f "$HYPR_DIR/hyprlock.conf" ]]; then
-	echo "Found Existing Hyprlock Config File, backing it up..."
-	if [[ -f "$HYPR_DIR/hyprlock.conf.backup" ]]; then
-		rm "$HYPR_DIR/hyprlock.conf.backup"
+	echo "Found Existing Hyprlock Config File,"
+	read -p "Do you want to backup your old hyprlock config (Y/n) ? " confbackup
+	if [[  $confbackup == "n" || $confbackup == "N" ]]; then
+		rm -f "$HYPR_DIR/hyprlock.conf"
+	else
+		if [[ -f "$HYPR_DIR/hyprlock.conf.backup" ]]; then
+			rm -f "$HYPR_DIR/hyprlock.conf.backup"
+		fi
+	    mv "$HYPR_DIR/hyprlock.conf" "$HYPR_DIR/hyprlock.conf.backup"
+	    echo "Backed Up Successfully"
 	fi
-    mv "$HYPR_DIR/hyprlock.conf" "$HYPR_DIR/hyprlock.conf.backup"
 fi
 
 if [[ -d "$HYPR_DIR/hyprlock" ]]; then
-	echo "Found Existing Hyprlock Folder, backing it up..."
-	if [[ -d "$HYPR_DIR/hyprlock.backup" ]]; then
-		rm -r "$HYPR_DIR/hyprlock.backup"
+	echo "Found Existing Hyprlock Folder,"
+	read -p "Do you want to backup your old hyprlock config (Y/n) ? " folderbackup
+	if [[  $folderbackup == "n" || $folderbackup == "N" ]]; then
+		rm -r "$HYPR_DIR/hyprlock"
+	else
+		if [[ -d "$HYPR_DIR/hyprlock.backup" ]]; then
+			rm -r "$HYPR_DIR/hyprlock.backup"
+		fi
+	    mv "$HYPR_DIR/hyprlock" "$HYPR_DIR/hyprlock.backup"
+	    echo "Backed Up Successfully"
 	fi
-    mv "$HYPR_DIR/hyprlock" "$HYPR_DIR/hyprlock.backup"
 fi
 
 cp -r hyprlock "$HYPR_DIR/"
@@ -61,9 +73,12 @@ fi
 
 COMM="bind = \$mainMod, L, exec, $COMM # launch lock screen"
 
-sed -i "/exec, hyprlock/d" "$HYPR_DIR/hyprland.conf" 2>/dev/null
-echo "$COMM" >> "$HYPR_DIR/hyprland.conf"
+read -p "Do you want to Update your Keybind for Blazinlock as Win + L (Y/n) ?" updtkeybind
+if ! [[ $updtkeybind == "n" || $updtkeybind == "N" ]]; then
+	sed -i "/exec, hyprlock/d" "$HYPR_DIR/hyprland.conf" 2>/dev/null
+	echo "$COMM" >> "$HYPR_DIR/hyprland.conf"
+	echo "An exec line Successfully added for BlazinLock in hyprland.conf"
+fi
 
 echo "Default Hyprlock Type Set Successfully"
-echo "Please Relogin or Restart the PC"
 echo "After Relogin Press Super Key (Windows) + L to Launch Lockscreen"

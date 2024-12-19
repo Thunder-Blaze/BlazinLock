@@ -71,6 +71,7 @@ HyperdotIntegration() {
     TEXT_COLOR=${TEXT_COLOR: -6}
 
     cd $HYPRLOCK_DIR
+    chmod u+w "hyprlock.conf"
 
     # Create the hyprlock config
     cat << EOF > "hyprlock.conf"
@@ -328,12 +329,13 @@ label {
     color = rgba(${FG_COLOR}BB)
     font_size = 12
     font_family = JetBrains Mono Nerd Font Mono
-    position = 24, -35
+    position = 10, -35
     halign = center
     valign = center
     zindex = 1
 }
 EOF
+    chmod u-w "hyprlock.conf"
     echo "Generated Hyprland/End4 Config"
 }
 
@@ -355,6 +357,7 @@ Standalone() {
     fi
 
     cd $HYPRLOCK_DIR
+    chmod u+w "hyprlock.conf"
 
     # Create the hyprlock config
     cat << EOF > "hyprlock.conf"
@@ -606,19 +609,15 @@ label {
     color = rgba(255, 255, 255, 0.8)
     font_size = 12
     font_family = JetBrains Mono Nerd Font Mono
-    position = 24, -35
+    position = 10, -35
     halign = center
     valign = center
     zindex = 1
 }
 EOF
+    chmod u-w "hyprlock.conf"
     echo "Generated Hyprland Config"
 }
-
-# echo "Background Image: $BACKGROUND_IMAGE"
-# echo "Hyprlock config updated successfully with modern hostname@username display."
-# hyprlock 
-
 
 case "$1" in
 -s) 
