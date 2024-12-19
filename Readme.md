@@ -97,3 +97,9 @@ Replace the pfp.jpg with the image you want as your PFP
 
 > [!IMPORTANT]
 > The only File types that are currently supported are JPG, PNG and WEBP.
+
+
+## RESOURCES
+Special Thanks to 
+In-saiyan's [hyprlock-config](https://github.com/In-Saiyan/hyprlock-config)
+ashish-kus's [hyprlock.conf](https://gist.github.com/ashish-kus/dd562b0bf5e8488a09e0b9c289f4574c)
