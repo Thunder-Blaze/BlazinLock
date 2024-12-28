@@ -39,6 +39,8 @@ if [[ -d "$HYPR_DIR/hyprlock" ]]; then
 	fi
 fi
 
+chmod +x "hyprlock/blazinscripts.sh"
+chmod +x blazinlock
 cp -r hyprlock "$HYPR_DIR/"
 cp blazinlock "$BINARY_DIR/"
 
