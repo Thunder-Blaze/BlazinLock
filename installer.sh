@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HYPR_DIR="$HOME/.config/hypr"
-BINARY_DIR="$HOME/.local/share/bin"
+BINARY_DIR="/usr/bin"
 
 if [[ -s "/usr/bin/figlet" ]]; then
 	figlet BlazinLock
@@ -42,7 +42,7 @@ fi
 chmod +x "hyprlock/blazinscripts.sh"
 chmod +x blazinlock
 cp -r hyprlock "$HYPR_DIR/"
-cp blazinlock "$BINARY_DIR/"
+sudo cp -f blazinlock "$BINARY_DIR/"
 
 echo "Installation Complete"
 echo ""
