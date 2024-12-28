@@ -49,6 +49,7 @@ To install, execute the following commands:
 ```shell
 git clone https://github.com/Thunder-Blaze/BlazinLock/ ~/BlazinLock
 cd ~/BlazinLock
+chmod +x installer.sh
 ./installer.sh
 ```
 
