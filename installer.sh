@@ -9,6 +9,11 @@ else
 	echo "BlazinLock"
 fi
 
+if ! [[ -s "/usr/bin/hyprlock" || -s "/usr/bin/hyprlock-git" ]]; then
+	echo "Hyprlock Not Found, Installing ..."
+ 	sudo pacman -S hyprlock
+fi
+
 echo ""
 
 if [[ -f "$HYPR_DIR/hyprlock.conf" ]]; then
