@@ -46,6 +46,24 @@ sudo cp -f blazinlock "$BINARY_DIR/"
 
 echo "Installation Complete"
 echo ""
+
+read -p "Do you want to Update your Keybind for Blazinlock as Win/Super + L (Y/n) ?" updtkeybind
+if [[ $updtkeybind == "n" || $updtkeybind == "N" ]]; then
+	exit 0
+fi
+
+echo ""
+echo "Choose your Config Dotfiles"
+echo "  1) End-4"
+echo "  2) Hyprdots"
+echo "  3) Normal"
+read -p "Enter the Respective Number - " USER_DOTS
+
+while [[ $USER_DOTS -lt 1 || $USER_DOTS -gt 3 ]]; do
+	read -p "Choose Correct Type - " USER_DOTS
+done
+
+echo ""
 echo "Hyprlock Types"
 echo "  1) Hyprdots (waybar) Integration Screenshot"
 echo "  2) Hyprdots (waybar) Integration Wallpaper"
@@ -53,6 +71,7 @@ echo "  3) End 4 Dots (ags) Integration Screenshot"
 echo "  4) End 4 Dots (ags) Integration Wallpaper"
 echo "  5) Screenshot Type Hyprlock"
 echo "  6) User Image Type Hyprlock (Not Available as Default)"
+echo "Warning: don't choose incompatible types"
 read -p "Choose Your Default Hyprlock Type - " USER_CHOICE
 
 while [[ $USER_CHOICE -lt 1 || $USER_CHOICE -gt 5 ]]; do
@@ -73,12 +92,19 @@ elif [[ $USER_CHOICE -eq 5 ]]; then
 	COMM="blazinlock -s"
 fi
 
-COMM="bind = \$mainMod, L, exec, $COMM # launch lock screen"
+# bind = Super, L, exec, loginctl lock-session
+# COMM="bind = Super, L, exec, $COMM # launch lock screen"
 
-read -p "Do you want to Update your Keybind for Blazinlock as Win + L (Y/n) ?" updtkeybind
-if ! [[ $updtkeybind == "n" || $updtkeybind == "N" ]]; then
+if [[ $USER_DOTS -eq 1 ]]; then
+	sed -i "s/loginctl lock-session/$COMM/g" "$HYPR_DIR/hyprland/keybinds.conf" 2>/dev/null
+	echo "An exec line Successfully added for BlazinLock in keybinds.conf"
+elif [[ $USER_DOTS -eq 2 ]]; then
+	sed -i "s/hyprlock/$COMM/g" "$HYPR_DIR/keybindings.conf" 2>/dev/null
+	sed -i "s/swaylock/$COMM/g" "$HYPR_DIR/keybindings.conf" 2>/dev/null
+	echo "An exec line Successfully added for BlazinLock in keybindings.conf"
+else
 	sed -i "/exec, hyprlock/d" "$HYPR_DIR/hyprland.conf" 2>/dev/null
-	echo "$COMM" >> "$HYPR_DIR/hyprland.conf"
+	echo "bind = Super, L, exec, $COMM # launch lock screen" >> "$HYPR_DIR/hyprland.conf"
 	echo "An exec line Successfully added for BlazinLock in hyprland.conf"
 fi
 
