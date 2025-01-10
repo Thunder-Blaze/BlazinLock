@@ -55,6 +55,25 @@ chmod +x installer.sh
 
 Please reboot or relogin after the install script completes.
 
+> [!INFO]
+> If the BlazinLock is not getting triggered by Default even after choosing yes in Installer
+> Manually set it to default by following the given instructions
+
+### Hyprdots
+- In `.config/hypr/keybindings.conf`, replace `swaylock` with `blazinlock -s`
+- you can replace -s with the type of lock you want
+
+### End-4 Dots
+- In `.config/hypr/hyprlock/keybinds.conf`, replace `loginctl lock-session` with `blazinlock -s`
+- you can replace -s with the type of lock you want
+
+### Normal Installations
+- add this line to your `.config/hypr/hyprlock.conf`
+- you can replace -s with the type of lock you want
+```shell
+bind = $mainMod, L, exec, blazinlock -s
+```
+
 > [!IMPORTANT]
 > Please note that any hyprlock configurations you had will be overwritten.
 > However, all replaced configs are backed up and may be recovered from `~/.config/hyde/hyprlock.conf.backup` and `~/.config/hyde/hyprlock.backup/`.
