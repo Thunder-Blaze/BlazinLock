@@ -55,9 +55,9 @@ HyperdotIntegration() {
         TEXT_COLOR=$(grep "\$onBackground:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
     else
         # WAYBAR INTEGRATION
-        FG_COLOR=$(grep 'main-fg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
-        BG_COLOR=$(grep 'main-bg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
-        TEXT_COLOR=$(grep 'wb-act-bg' "$WAYBAR_THEME_CSS" | awk '{print $3}' | tr -d ';')
+        FG_COLOR=$(grep 'main-fg' "$WAYBAR_THEME_CSS" | awk -F'rgba\\(|,|\\)' '{printf "%02X%02X%02X\n", $2, $3, $4}')
+        BG_COLOR=$(grep 'main-bg' "$WAYBAR_THEME_CSS" | awk -F'rgba\\(|,|\\)' '{printf "%02X%02X%02X\n", $2, $3, $4}')
+        TEXT_COLOR=$(grep 'wb-act-bg' "$WAYBAR_THEME_CSS" | awk -F'rgba\\(|,|\\)' '{printf "%02X%02X%02X\n", $2, $3, $4}')
     fi
 
     # Check if colors were extracted successfully
@@ -99,6 +99,7 @@ input-field {
     dots_spacing = 0.2 # Scale of dots' absolute size, 0.0 - 1.0
     dots_center = true
     outer_color = rgba(${TEXT_COLOR}99)
+    fail_color = rgba(${TEXT_COLOR}99)
     inner_color = rgba(${BG_COLOR}FF)
     font_color = rgba(${TEXT_COLOR}FF)
     fade_on_empty = false
@@ -385,6 +386,7 @@ input-field {
     dots_spacing = 0.2 # Scale of dots' absolute size, 0.0 - 1.0
     dots_center = true
     outer_color = rgba(22222299)
+    fail_color = rgba(22222299)
     inner_color = rgba(255, 255, 255, 0.8)
     font_color = rgb(34, 34, 34)
     fade_on_empty = false
