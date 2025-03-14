@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 HYPR_DIR="$HOME/.config/hypr"
 BINARY_DIR="/usr/bin"

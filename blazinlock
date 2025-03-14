@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function help {
     if [ -s /usr/bin/figlet ]; then
