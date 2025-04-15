@@ -18,6 +18,10 @@ if [ "$1" == "-bat" ]; then
 	# Calculate the index for the icon array
 	icon_index=$((battery_percentage / 10))
 
+ 	if [ "$icon_index" -eq 10 ]; then
+  		icon_index=9
+    	fi
+
 	# Get the corresponding icon
 	battery_icon=${battery_icons[icon_index]}
 
