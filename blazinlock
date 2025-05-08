@@ -26,7 +26,8 @@ function help {
 
 if [ "$#" -eq 0 ]; then
     help
-    exit  1
+    echo "Falling Back to Screenshot"
+    Standalone 0
 fi
 
 # Define paths
@@ -648,7 +649,9 @@ case "$1" in
 ;;
 *)
     help
-    exit 1
+    echo "Falling Back to Screenshot"
+    Standalone 0
+    # exit 1
 ;;
 esac
 
