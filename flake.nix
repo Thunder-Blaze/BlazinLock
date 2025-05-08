@@ -21,7 +21,7 @@
             owner = "Thunder-Blaze";
             repo = "BlazinLock";
             rev = "critical";
-            sha256 = "sha256-8YgmJbYDLiTdRDSR7/F8p8Lv4KLkap+R7YI/VdUhAms=";
+            sha256 = "sha256-c97fpV27asUWj52yRw2QKl0OduGct2YOu6iVcIWT+y8=";
           };
 
           nativeBuildInputs = [ pkgs.makeWrapper ];
