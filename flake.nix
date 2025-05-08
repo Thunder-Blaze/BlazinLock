@@ -21,7 +21,7 @@
             owner = "Thunder-Blaze";
             repo = "BlazinLock";
             rev = "critical";
-            sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            sha256 = "sha256-HL4Jth20MiB89MHEE8eTg3mu+PL9QRtGD5VTBPdP/YA=";
           };
 
           nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -30,7 +30,7 @@
            echo "Installing to: $out"
 
           # Verify if $out exists and is correct
-          mkdir -p $out
+          mkdir -p $out/bin
           if [ ! -d "$out" ]; then
             echo "Error: $out does not exist"
             exit 1
