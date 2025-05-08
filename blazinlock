@@ -626,7 +626,7 @@ EOF
 case "$1" in
 -cn)
   echo "Configuring BlazinLock for Nix"
-  cp -r "$BLAZINLOCK_DATA_DIR/hyprlock" ~/.config/hypr
+  sudo cp -r "$BLAZINLOCK_DATA_DIR/hyprlock" ~/.config/hypr
   echo "Configuration Completed, Now you can use BlazinLock."
 ;;
 -s) 

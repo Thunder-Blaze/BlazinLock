@@ -21,7 +21,7 @@
             owner = "Thunder-Blaze";
             repo = "BlazinLock";
             rev = "critical";
-            sha256 = "sha256-HL4Jth20MiB89MHEE8eTg3mu+PL9QRtGD5VTBPdP/YA=";
+            sha256 = "sha256-HL4Jth20MiB89MHEE8eTg3mY+PL9QRtGD5VTBPdP/YA=";
           };
 
           nativeBuildInputs = [ pkgs.makeWrapper ];
@@ -37,11 +37,11 @@
           fi
 
            # Copy blazinlock to the correct directory
-           cp blazinlock $out/bin/blazinlock-raw
-           chmod +x $out/bin/blazinlock-raw
+           cp blazinlock $out/blazinlock-raw
+           chmod +x $out/blazinlock-raw
 
            # Wrap the binary with environment variables
-           makeWrapper $out/bin/blazinlock-raw $out/bin/blazinlock --set BLAZINLOCK_DATA_DIR $out/
+           makeWrapper $out/bin/blazinlock-raw $out/blazinlock --set BLAZINLOCK_DATA_DIR $out/
 
            # Copy hyprlock config into the right place
            cp -r hyprlock $out/
