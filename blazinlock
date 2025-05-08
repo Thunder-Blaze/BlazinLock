@@ -6,15 +6,16 @@ function help {
     else
         echo "Help"
     fi
-    echo "Usage: blazinlock [OPTIONS] [OPTION_VALUE]"
+    echo "Usage: blazinlock [OPTIONS] [OPTION_VALUE](Optional)"
     echo "Eg -"
+    echo "  blazinlock -cn"
     echo "  blazinlock -hw"
-    echo "  blazinlock -hs"
     echo "  blazinlock -i \$HOME/Pictures/background.png"
     echo "  blazinlock -s"
     echo ""
     echo "============================================================="
     echo "OPTIONS"
+    echo "  -cn = Configure for NixOS (Copies the Hyprlock Folder)"
     echo "  -hs = Hyprdots (waybar) Integration Screenshot"
     echo "  -hw = Hyprdots (waybar) Integration Wallpaper"
     echo "  -es = End 4 Dots (ags) Integration Screenshot"
@@ -623,6 +624,11 @@ EOF
 }
 
 case "$1" in
+-cn)
+  echo "Configuring BlazinLock for Nix"
+  cp -r "$BLAZINLOCK_DATA_DIR/hyprlock" ~/.config/hypr
+  echo "Configuration Completed, Now you can use BlazinLock."
+;;
 -s) 
     echo "Screenshot Lock"
     Standalone 0
