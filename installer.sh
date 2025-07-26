@@ -74,12 +74,14 @@ echo "  1) Hyprdots (waybar) Integration Screenshot"
 echo "  2) Hyprdots (waybar) Integration Wallpaper"
 echo "  3) End 4 Dots (ags) Integration Screenshot"
 echo "  4) End 4 Dots (ags) Integration Wallpaper"
-echo "  5) Screenshot Type Hyprlock"
-echo "  6) User Image Type Hyprlock (Not Available as Default)"
+echo "  5) End 4 Dots (quickshell) Integration Screenshot"
+echo "  6) End 4 Dots (quickshell) Integration Wallpaper"
+echo "  7) Screenshot Type Hyprlock"
+echo "  8) User Image Type Hyprlock (Not Available as Default)"
 echo "Warning: don't choose incompatible types"
 read -p "Choose Your Default Hyprlock Type - " USER_CHOICE
 
-while [[ $USER_CHOICE -lt 1 || $USER_CHOICE -gt 5 ]]; do
+while [[ $USER_CHOICE -lt 1 || $USER_CHOICE -gt 8 ]]; do
 	read -p "Choose Correct Type - " USER_CHOICE
 done
 
@@ -94,6 +96,10 @@ elif [[ $USER_CHOICE -eq 3 ]]; then
 elif [[ $USER_CHOICE -eq 4 ]]; then
 	COMM="blazinlock -ew"
 elif [[ $USER_CHOICE -eq 5 ]]; then
+	COMM="blazinlock -qs"
+elif [[ $USER_CHOICE -eq 6 ]]; then
+	COMM="blazinlock -qw"
+elif [[ $USER_CHOICE -eq 7 ]]; then
 	COMM="blazinlock -s"
 fi
 
