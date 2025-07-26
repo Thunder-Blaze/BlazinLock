@@ -78,10 +78,8 @@ HyperdotIntegration() {
     # Create the hyprlock config
     cat << EOF > "hyprlock.conf"
 general {
-    grace = 1
     ignore_empty_input = true
     text_trim = false
-    disable_loading_bar = true
 }
 
 background {
@@ -365,10 +363,8 @@ Standalone() {
     # Create the hyprlock config
     cat << EOF > "hyprlock.conf"
 general {
-    grace = 1
     ignore_empty_input = true
     text_trim = false
-    disable_loading_bar = true
 }
 
 background {
