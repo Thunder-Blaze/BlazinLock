@@ -7,7 +7,7 @@
 <br>
 <a id="introduction"></a>  
 <div align="center">
-A Modern HyprLock Theme which is compatible with End4dots, Hyprdots adn Default Hyprland Installations
+A Modern HyprLock Theme which is compatible with End4dots, Hyprdots and Default Hyprland Installations
 </div>
 <br>
 
@@ -19,6 +19,8 @@ A Modern HyprLock Theme which is compatible with End4dots, Hyprdots adn Default 
 * Modern Looking Input Box
 * Auto Color Pallete generation for End4 and Hyprdots
 * HyprLock Config Creation using Various Methords
+  * Screenshot with End4 (QuickShell) Material Color Scheme
+  * Current Wallpaper with End4 (QuickShell) Material Color Scheme
   * Screenshot with End4 (Ags) Material Color Scheme
   * Current Wallpaper with End4 (Ags) Material Color Scheme
   * Screenshot with Hyprdots (Waybar) Color Scheme
@@ -83,6 +85,14 @@ bind = $mainMod, L, exec, blazinlock -s
 ---
 
 <table width="100%">
+  <tr>
+    <th><div align="center">blazinlock -qw</div></th>
+    <th><div align="center">blazinlock -qs</div></th>
+  <tr>
+  <tr>
+    <td><img src="./assets/blazinlockqw.png" width="100%"></td>
+    <td><img src="./assets/blazinlockqs.png" width="100%"></td>
+  <tr>
   <tr>
     <th><div align="center">blazinlock -ew</div></th>
     <th><div align="center">blazinlock -es</div></th>
