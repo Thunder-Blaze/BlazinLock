@@ -20,6 +20,8 @@ function help {
     echo "  -hw = Hyprdots (waybar) Integration Wallpaper"
     echo "  -es = End 4 Dots (ags) Integration Screenshot"
     echo "  -ew = End 4 Dots (ags) Integration Wallpaper"
+    echo "  -qs = End 4 Dots (quickshell) Integration Screenshot"
+    echo "  -qw = End 4 Dots (quickshell) Integration Wallpaper"
     echo "  -s  = Screenshot Type Hyprlock"
     echo "  -i  = User Image Type Hyprlock"
 }
@@ -35,22 +37,39 @@ fi
 HYPRLOCK_DIR="$HOME/.config/hypr/"
 WAYBAR_THEME_CSS="$HOME/.config/waybar/theme.css"
 AGS_THEME_CSS="$HOME/.local/state/ags/scss/_material.scss"
+QS_THEME_CSS="$HOME/.local/state/quickshell/user/generated/material_colors.scss"
+IICONFIG="$HOME/.config/illogical-impulse/config.json"
 
 HyperdotIntegration() {
     local TYPE=$1
+    local DOT_TYPE=$2
 
     if [ $TYPE -eq 0 ]; then
         BACKGROUND_IMAGE=screenshot
     else
-        BACKGROUND_IMAGE=$(swww query | grep -oP 'currently displaying: image: \K.*')
+        BACKGROUND_IMAGE=""
+        if [ "$DOT_TYPE" == "end4qs" ]; then
+            BACKGROUND_IMAGE=$(jq -r '.background.wallpaperPath' $IICONFIG 2>/dev/null || echo "")
+        else
+            BACKGROUND_IMAGE=$(swww query | grep -oP 'currently displaying: image: \K.*')
+        fi
         if [ -z "$BACKGROUND_IMAGE" ] || [ ! -f "$BACKGROUND_IMAGE" ]; then
-            echo "No valid background image found from swww."
+            if [ "$DOT_TYPE" == "end4qs" ]; then
+                echo "No valid background image found from illogical-impulse config."
+            else
+                echo "No valid background image found from swww."
+            fi
             exit 1
         fi
     fi
 
     # Extract Theme Colors
-    if [ "$2" == "end4" ]; then
+    if [ "$DOT_TYPE" == "end4qs" ]; then
+        # QS INTEGRATION (End 4 Dots)
+        FG_COLOR=$(grep "\$primary:" "$QS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+        BG_COLOR=$(grep "\$surface:" "$QS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+        TEXT_COLOR=$(grep "\$onSurface:" "$QS_THEME_CSS" | awk '{print $2}' | tr -d ';')
+    elif [ "$DOT_TYPE" == "end4ags" ]; then
         # AGS INTEGRATION (End 4 Dots)
         FG_COLOR=$(grep "\$primary:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
         BG_COLOR=$(grep "\$background:" "$AGS_THEME_CSS" | awk '{print $2}' | tr -d ';')
@@ -347,7 +366,7 @@ Standalone() {
         BACKGROUND_IMAGE=screenshot
     else
         BACKGROUND_IMAGE="$2"
-        echo $2
+        echo $BACKGROUND_IMAGE
         if [ -z "$BACKGROUND_IMAGE" ] || [ ! -f "$BACKGROUND_IMAGE" ]; then
             echo "No valid path provided for background image."
             exit 1
@@ -642,12 +661,20 @@ case "$1" in
     HyperdotIntegration 1
 ;;
 -es)
-    echo "End 4 Screenshot"
-    HyperdotIntegration 0 end4
+    echo "End 4 Screenshot (Ags)"
+    HyperdotIntegration 0 end4ags
 ;;
 -ew)
-    echo "End 4 Wallpaper"
-    HyperdotIntegration 1 end4
+    echo "End 4 Wallpaper (Ags)"
+    HyperdotIntegration 1 end4ags
+;;
+-qs)
+    echo "End 4 Screenshot (QuickShell)"
+    HyperdotIntegration 0 end4qs
+;;
+-qw)
+    echo "End 4 Wallpaper (QuickShell)"
+    HyperdotIntegration 1 end4qs
 ;;
 *)
     help
