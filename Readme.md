@@ -122,7 +122,7 @@ bind = $mainMod, L, exec, blazinlock -s
 
 
 ## CUSTOMIZING PFP
-After Installation, goto "~/.config/hyde/hyprlock"
+After Installation, goto "~/.config/hypr/hyprlock"
 Replace the pfp.jpg with the image you want as your PFP
 
 > [!IMPORTANT]
